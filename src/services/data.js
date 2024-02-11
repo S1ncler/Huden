@@ -1,57 +1,83 @@
-const API_URL = "./src/jsons/data.json";
-const API_HUDEN = "https://hudenback.onrender.com";
+import { useState } from "react";
 
-export const listAll = async () => {
-  try {
-    const response = await fetch(`${API_HUDEN}/assets`);
-    const data = await response.json();
-    return data;
-  } catch {
-    throw new Error("Error in fetch products");
-  }
-};
 
-export const getOne = async (id) => {
-  try {
-    const response = await fetch(`${API_URL}/${id}`);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-export const newData = async (newRegister, token) => {
-  try {
+
+export const useProducts = () => {
+  const API_URL = "./src/jsons/data.json";
+  const API_HUDEN = "https://hudenback.onrender.com";
+  const [isLoading, setIsLoading] = useState(false);
+
+  const listAll = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_HUDEN}/assets`);
+      const data = await response.json();
+      setIsLoading(false);
+      return data;
+    } catch {
+      setIsLoading(false);
+      throw new Error("Error in fetch products");
+    }
+  };
+
+  const getOne = async (id) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/${id}`);
+      const data = await response.json();
+      setIsLoading(false);
+      return data;
+    } catch (error) {
+      setIsLoading(false);
+      throw new Error(error);
+    }
+  };
+  const newData = async (newRegister, token) => {
+    setIsLoading(true);
+    try {
+      const payload = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newRegister),
+      };
+      const response = await fetch(`${API_HUDEN}/assets`, payload);
+      const data = await response.json();
+      setIsLoading(false);
+      return data;
+    } catch (error) {
+      setIsLoading(false);
+      throw new Error(error);
+    }
+  };
+  const updateByCode = async (code, token, body) => {
+    setIsLoading(true);
     const payload = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // Agregar el token de autorización aquí
       },
-      body: JSON.stringify(newRegister),
+      body: JSON.stringify(body),
     };
-    const response = await fetch(`${API_HUDEN}/assets`, payload);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-export const updateByCode = async (code, token, body) => {
-  const payload = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Agregar el token de autorización aquí
-    },
-    body: JSON.stringify(body),
+    try {
+      const response = await fetch(`${API_HUDEN}/assets/${code}`, payload);
+      const data = await response.json();
+      setIsLoading(false);
+      return data;
+    } catch (error) {
+      setIsLoading(false);
+      throw new Error(error);
+    }
   };
-  try {
-    const response = await fetch(`${API_HUDEN}/assets/${code}`, payload);
-    console.log(response);
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
+
+  return {
+    listAll,
+    getOne,
+    newData,
+    updateByCode,
+    isLoading
+  };
+}
