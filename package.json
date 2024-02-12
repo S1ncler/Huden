@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "start": "vite dist"
+    "start": "serve -s dist"
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -26,6 +26,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
+    "serve": "^14.2.1",
     "sweetalert2": "^11.10.5",
     "sweetalert2-react-content": "^5.0.7",
     "zod": "^3.22.4"
