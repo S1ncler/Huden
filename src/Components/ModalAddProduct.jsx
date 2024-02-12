@@ -140,11 +140,9 @@ const ModalAddProduct = ({ open, handleClose, activeList, baseList }) => {
                         label='Forma farmacéutica'
                     >
                         {baseList.map(base => (
-                            <>
-                                {base.state && (
-                                    <MenuItem value={base.name}>{base.name}</MenuItem>
-                                )}
-                            </>
+                            base.state && (
+                                <MenuItem key={base.name} value={base.name}>{base.name}</MenuItem>
+                            )
                         ))}
                     </Select>
                     {errors.pharmaceuticalForm && <FormHelperText>{errors.pharmaceuticalForm}</FormHelperText>}
@@ -162,12 +160,9 @@ const ModalAddProduct = ({ open, handleClose, activeList, baseList }) => {
                                 label={`Activo ${index + 1}`}
                             >
                                 {activeList.map(active => (
-                                    <>
-                                        {active.state && (
-                                            <MenuItem value={active.name}>{active.name}</MenuItem>
-                                        )}
-                                    </>
-
+                                    active.state && (
+                                        <MenuItem value={active.name}>{active.name}</MenuItem>
+                                    )
                                 ))}
                             </Select>
                             <FormHelperText>{errors.pharmaceuticalForm}</FormHelperText>

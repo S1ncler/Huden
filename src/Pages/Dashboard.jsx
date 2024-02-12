@@ -3,9 +3,7 @@ import { useProducts } from '../services/data';
 import { useFixedIps } from '../services/fixed';
 import Header from '../Components/Header';
 import ModalAddProduct from '../Components/ModalAddProduct';
-import ResumePedido from '../Components/ResumePedido';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Spinner from '../Components/spinner';
@@ -21,79 +19,33 @@ function Dashboard() {
   const { GetFixed } = useFixedIps();
   const [activeList, setActiveList] = useState([]);
   const [baseList, setBaseList] = useState([]);
-  const [data, setData] = useState();
   const [products, setProducts] = useState([]);
-  const [selecData, setSelectData] = useState();
-  const [addComponent, setAddComponent] = useState(1);
-  const [formData, setFormData] = useState();
-  const [showResume, setShowResume] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [quantity, setQuantity] = useState([]);
   const [fixed, setFixed] = useState({});
 
-  const handleChangeQuantity = (event, index) => {
-    let newQuantity = quantity;
-    newQuantity[index] = event.target.value;
-    setQuantity(newQuantity);
-  };
 
-  const MySwal = withReactContent(Swal)
-
-  //funcion para abrir-cerrar modal
   const handleShowModal = () => {
-    if (selecData != undefined) {
-      MySwal.fire({
-        title: 'Si no has descargado la cotización, se borrarán los datos.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Aceptar',
-        cancelButtonText: 'Cancelar'
-      })
-        .then((result) => {
-          /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
-            window.location.reload()
-            Swal.fire("Saved!", "", "success");
-          } else if (result.isDenied) {
-            Swal.fire("Changes are not saved", "", "info");
-          }
-        });
-    } else {
-      setShowModal(!showModal);
-      setShowResume(false);
+    setShowModal(!showModal);
+  }
+
+  const handleChangeQuantity = (value, index) => {
+    // Eliminar ceros no significativos del valor ingresado
+    const sanitizedValue = value.replace(/^0+(?=\d)/, '');
+
+    // Convertir el valor a un número entero
+    const parsedValue = Number(sanitizedValue);
+
+    // Verificar si el valor es un número válido, no es negativo y no contiene un cero antes del número
+    if (!isNaN(parsedValue) && parsedValue >= 0 && sanitizedValue === value) {
+      // Crear una copia del array quantity
+      const newQuantity = [...quantity];
+      // Asignar el nuevo valor al índice correspondiente
+      newQuantity[Number(index)] = parsedValue;
+      // Actualizar el estado con la nueva copia
+      setQuantity(newQuantity);
     }
   }
-
-  //funcion para abrir-cerrar modal
-  const handleShowResume = () => {
-    setShowResume(!showResume);
-    setShowModal(false)
-  }
-
-  //funcion para recibir data de componente hijo
-  const handledatachild = (data) => {
-    setFormData(data)
-  }
-
-  //funcion que maneja la seleccion de los productos a cotizar
-  const handleSelectData = (data) => {
-    setSelectData((prevData) => ({
-      ...prevData,
-      [formData?.Paciente]: formData,
-      //[data._id]: data,
-    }))
-  }
-
-
-
-  //funcion que maneja agregar mas de un principio activo
-  const handleAddPrincipiosItem = () => {
-    if (addComponent < 3) {
-      setAddComponent(addComponent + 1)
-    } else {
-      alert("Solo se permiten tres activos")
-    }
-  };
 
   const getProducts = async () => {
     try {
@@ -196,7 +148,6 @@ function Dashboard() {
       prod.activePrinciples.some(objeto => objeto.name === 'ASCORBIL FOSFATO DE SODIO') ||
       prod.activePrinciples.some(objeto => objeto.name === 'JAROCOL RL - RESORCINA')
     ) {
-      console.log('entre a cambiar la base')
       prod.pharmaceuticalForm = 'EMULGEL';
     }
     let percAct = 0;
@@ -270,23 +221,9 @@ function Dashboard() {
         <div style={{ backgroundColor: '#bed0ff', padding: '15px', borderRadius: '12px', minHeight: 500 }}>
           <h2 className="text-center" style={{ color: '#092f62', marginTop: '20px' }}>Productos</h2>
           <hr />
-          {showModal ?
-            <><ModalAddProduct open={showModal} handleClose={handleCloseModal} activeList={activeList} baseList={baseList} />
-              {/* <ModalAddProducts
-                addComponent={addComponent}
-                handleSelectData={handleSelectData}
-                selecData={selecData}
-                show={showResume}
-                handleShow={handleShowResume}
-                handleAddPrincipiosItem={handleAddPrincipiosItem}
-                base={base}
-                principios={principios}
-                handledatachild={handledatachild}
-                handleShowModal={handleShowModal} /> */}
-            </>
-            : showResume &&
-            <ResumePedido handleShow={handleShowResume} selecData={selecData} />
-          }
+          {showModal && (
+            <ModalAddProduct open={showModal} handleClose={handleCloseModal} activeList={activeList} baseList={baseList} />
+          )}
           {products.map((prod, index) => (
             <div key={index}>
               <Box
@@ -324,8 +261,8 @@ function Dashboard() {
                     sx={{ minWidth: "200px" }}
                     label="Cantidad de unidades"
                     type="number"
-                    value={quantity[index]}
-                    onChange={(e) => setQuantity(e.target.value, index)}
+                    value={quantity[Number(index)]}
+                    onChange={(e) => handleChangeQuantity(e.target.value, index)}
                   />
                 </Box>
                 <Box alignSelf="flex-start">

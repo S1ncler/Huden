@@ -33,15 +33,14 @@ function FormAuth({ singUp, handleShow }) {
       //login
       signInSchema.parse(formDataLogin);
       const res = await login(formDataLogin);
-      console.log(res.msg)
-      if (res.msg !== 'INCORRECT_USER_DATA' && res.msg !== 'NOT_REGISTERED_IP') {
+      if (res.msg !== 'INCORRECT_USER_DATA' && res.msg !== 'NOT_REGISTERED_IP' && res.msg !== 'NOT_VALID_IP') {
         navigate('/dashboard');
       }
-      else if (res.msg === 'NOT_REGISTERED_IP') {
+      else if (res.msg === 'NOT_REGISTERED_IP' || res.msg === 'NOT_VALID_IP') {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Estas intentando acceder desde una locacion no autorizada!"
+          text: "Estas intentando acceder desde una localización no autorizada!"
         });
       }
       else {

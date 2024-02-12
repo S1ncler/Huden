@@ -105,7 +105,7 @@ export const useUsers = () => {
       };
       const response = await fetch(`${API_HUDEN}/auth/login`, payload);
       const data = await response.json();
-      if (data.msg !== 'INCORRECT_USER_DATA' && data.msg !== 'NOT_REGISTERED_IP') {
+      if (data.msg !== 'INCORRECT_USER_DATA' && data.msg !== 'NOT_REGISTERED_IP' && data.msg !== 'NOT_VALID_IP') {
         const decoded = jwtDecode(`'${data.msg.token}'`);
         dispatch({ type: "LOGIN", payload: { data, decoded, user } });
         localStorage.setItem("user", JSON.stringify({ data, decoded, user }));

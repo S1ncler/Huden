@@ -28,7 +28,7 @@ const Header = () => {
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-              <a className="nav-link active" aria-current="page" href="/"><img src="./src/assets/huden-arribaderecha.png" alt="" className="img-fluid" style={{ height: 50, marginRight: '15px' }} /></a>
+              <a className="nav-link active" aria-current="page" href="/"><img src="img/huden-arribaderecha.png" alt="" className="img-fluid" style={{ height: 50, marginRight: '15px' }} /></a>
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 {admin ?
                   <>
@@ -46,9 +46,7 @@ const Header = () => {
                     </li>
                   </>
                   :
-                  <li className="nav-item">
-                    <a className="nav-link" href="/dashboard" style={{ color: 'white' }}>Cotizador</a>
-                  </li>
+                  <></>
                 }
               </ul>
             </div>
