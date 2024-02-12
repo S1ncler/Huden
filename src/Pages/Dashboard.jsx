@@ -194,11 +194,8 @@ function Dashboard() {
     });;
   }
 
-  const handleDelete = (index) => {
-    let array = products.splice(index + 1, 1);
-    let array2 = quantity.splice(index + 1, 1);
-    setProducts(array);
-    setQuantity(array2);
+  const handleDelete = (indexToDelete) => {
+    setProducts(prevProductos => prevProductos.filter((producto, index) => index !== indexToDelete));
   }
 
   const handleSendOrder = () => {
