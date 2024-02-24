@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Header from '../Components/Header';
 import FormAuth from '../Components/FormAuth';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import { AuthProvider } from '../Context/AuthContext';
+import Swal from 'sweetalert2';
 
 function Login() {
   const navigate = useNavigate();

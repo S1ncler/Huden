@@ -145,6 +145,22 @@ function AdminFixed() {
                     //optionally add validation checking for onBlur or onChange
                 },
             },
+            {
+                accessorKey: 'orderEmail',
+                header: 'Email Ordenes',
+                muiEditTextFieldProps: {
+                    required: true,
+                    error: !!validationErrors?.orderEmail,
+                    helperText: validationErrors?.orderEmail,
+                    //remove any previous validation errors when user focuses on the input
+                    onFocus: () =>
+                        setValidationErrors({
+                            ...validationErrors,
+                            orderEmail: undefined,
+                        }),
+                    //optionally add validation checking for onBlur or onChange
+                },
+            },
         ],
         [validationErrors],
     );
@@ -167,6 +183,13 @@ function AdminFixed() {
     //useDeleteUser();
 
     const validateRequired = (value) => !!value.length;
+    const validateEmail = (email) =>
+    !!email.length &&
+    email
+      .toLowerCase()
+      .match(
+        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+      );
 
     function validateUser(data) {
         return {
@@ -175,6 +198,7 @@ function AdminFixed() {
             iva: !validateRequired(data.iva) ? 'El iva es requerido' : '',
             fullPrice: !validateRequired(data.fullPrice) ? 'El precio completo es requerido' : '',
             patientPrice: !validateRequired(data.patientPrice) ? 'El precio paciente es requerido' : '',
+            orderEmail: !validateRequired(data.orderEmail) ? 'Ingrese un email valido' : '',
         };
     }
 
@@ -193,6 +217,7 @@ function AdminFixed() {
             iva: values.iva,
             fullPrice: values.fullPrice,
             patientPrice: values.patientPrice,
+            orderEmail: values.orderEmail,
         }
         try {
             const res = await UpdateFixed(body, localStorage.getItem('token') || '');
