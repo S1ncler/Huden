@@ -357,8 +357,6 @@ function AdminProducts() {
 
   const fetchData = async (query = {}) => {
     try {
-      const token = localStorage.getItem('token') || ''
-      console.log('eltoken', token)
       const data = await listAll(query);
       if (data) {
         setData(data.msg);
@@ -367,7 +365,7 @@ function AdminProducts() {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Ha habido un error al obtener los usuarios, intentalo de nuevo o contacta al administrador!",
+          text: "Ha habido un error al obtener los productos, intentalo de nuevo o contacta al administrador!",
         });
       }
     } catch (error) {
@@ -375,7 +373,7 @@ function AdminProducts() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Ha habido un error al obtener los usuarios, intentalo de nuevo o contacta al administrador!",
+        text: "Ha habido un error al obtener los productos, intentalo de nuevo o contacta al administrador!",
       });
     }
   }

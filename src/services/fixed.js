@@ -108,12 +108,78 @@ export const useFixedIps = () => {
         }
     };
 
+    const GetPercents = async (token) => {
+        setIsLoading(true);
+        const payload = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // Agregar el token de autorización aquí
+            },
+        };
+        try {
+            const response = await fetch(`${API_HUDEN}/percentAdjust`, payload);
+            const data = await response.json();
+            setIsLoading(false);
+            return [data, response.status];
+        } catch (error) {
+            setIsLoading(false);
+            throw new Error(error);
+        }
+    };
+
+    const UpdatePercents = async (asset, token, body) => {
+        setIsLoading(true);
+        // descomentar cuándo se conecte con el back
+        const payload = {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, // Agregar el token de autorización aquí
+            },
+            body: JSON.stringify(body),
+        };
+        try {
+            const response = await fetch(`${API_HUDEN}/percentAdjust/${asset}`, payload);
+            const data = await response.json();
+            setIsLoading(false);
+            return data;
+        } catch (error) {
+            setIsLoading(false);
+            throw new Error(error);
+        }
+    };
+
+    const postPercent = async (newRegister, token) => {
+        setIsLoading(true);
+        try {
+            const payload = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(newRegister),
+            };
+            console.log(payload)
+            const response = await fetch(`${API_HUDEN}/percentAdjust`, payload);
+            const data = await response.json();
+            setIsLoading(false);
+            return data;
+        } catch (error) {
+            setIsLoading(false);
+            throw new Error(error);
+        }
+    };
+
     return {
         GetFixed,
         UpdateFixed,
         GetIps,
         UpdateIps,
         postIp,
+        GetPercents,
+        UpdatePercents,
+        postPercent,
         isLoading
     };
 }

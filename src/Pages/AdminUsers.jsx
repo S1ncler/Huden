@@ -148,6 +148,23 @@ function AdminUsers() {
           helperText: validationErrors?.status,
         },
       },
+      {
+        accessorKey: 'orderEmail',
+        header: 'Email Ordenes',
+        size: 120,
+        muiEditTextFieldProps: {
+          type: 'email',
+          required: true,
+          error: !!validationErrors?.email,
+          helperText: validationErrors?.email,
+          //remove any previous validation errors when user focuses on the input
+          onFocus: () =>
+            setValidationErrors({
+              ...validationErrors,
+              email: undefined,
+            }),
+        },
+      },
     ],
     [validationErrors],
   );
@@ -192,6 +209,7 @@ function AdminUsers() {
       email: !validateEmail(user.email) ? 'Por favor inserte un email valido' : '',
       password: !validatePassword(user.password) ? 'La contraseña debe trener al menos 8 digitos, una mayuscula, una minuscula, un numero y un caracter especial' : '',
       rol: !validateRequired(user.rol) ? 'El rol es requerido' : '',
+      orderEmail: !validateRequired(user.rol) ? 'Por favor inserte un email valido' : '',
     };
   }
 
@@ -243,7 +261,8 @@ function AdminUsers() {
       password: values.password,
       name: values.name,
       rol: values.rol,
-      status: values.status === 'Activo' ? true : false
+      status: values.status === 'Activo' ? true : false,
+      orderEmail: values.orderEmail
     }
     try {
       const res = await updateUser(values.email, localStorage.getItem('token') || '', body);

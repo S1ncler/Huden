@@ -21,7 +21,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const { SendOrder, isLoadingOrd } = useOrders();
   const { listAll, isLoading } = useProducts();
-  const { GetFixed } = useFixedIps();
+  const { GetFixed, GetPercents } = useFixedIps();
   const [activeList, setActiveList] = useState([]);
   const [baseList, setBaseList] = useState([]);
   const [products, setProducts] = useState([]);
@@ -30,6 +30,7 @@ function Dashboard() {
   const [fixed, setFixed] = useState({});
   const [repeateds, setRepeateds] = useState([]);
   const [opens, setOpens] = useState([]);
+  const [percents, setPercents] = useState([]);
 
 
   const handleShowModal = () => {
@@ -99,6 +100,25 @@ function Dashboard() {
         text: "Error al obtener los datos fijos, por favos intentalo mas tarde o contacta al administrador!"
       });
     }
+    try {
+      const data = await GetPercents();
+      if (data) {
+        setPercents(data[0].msg.filter(percent => percent.status === true));
+      }
+      else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Ha habido un error al obtener las ips, intentalo de nuevo o contacta al administrador!",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Error al obtener los datos fijos, por favos intentalo mas tarde o contacta al administrador!"
+      });
+    }
   }
 
   //constante para pasar los estilos de la pagina
@@ -159,13 +179,14 @@ function Dashboard() {
       prod.pharmaceuticalForm = 'EMULGEL';
     }
     let percAct = 0;
-    prod.activePrinciples.map(act => percAct += Number(act.concentration));
+    prod.activePrinciples.map(act => percAct += (Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)));
+    console.log(percAct)
     const percBase = 100 - percAct;
     const unitbase = (percBase * Number(prod.presentation)) / 100;
     const basePrice = baseList.find(base => base.name == prod.pharmaceuticalForm).price * unitbase;
     let activesPrice = 0;
     prod.activePrinciples.map(act => {
-      const unitAct = (Number(act.concentration) * Number(prod.presentation)) / 100;
+      const unitAct = ((Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)) * Number(prod.presentation)) / 100;
       let activePrice = activeList.find(active => active.name == act.name).price * unitAct;
       activesPrice += activePrice;
     });
@@ -179,13 +200,13 @@ function Dashboard() {
 
   const calcPatPrice = (prod, index) => {
     let percAct = 0;
-    prod.activePrinciples.map(act => percAct += Number(act.concentration));
+    prod.activePrinciples.map(act => percAct += (Number(act.concentration) * percents.find(percent => percent.asset === act.name).percentAdjust || 1));
     const percBase = 100 - percAct;
     const unitbase = (percBase * Number(prod.presentation)) / 100;
     const basePrice = baseList.find(base => base.name == prod.pharmaceuticalForm).price * unitbase;
     let activesPrice = 0;
     prod.activePrinciples.map(act => {
-      const unitAct = (Number(act.concentration) * Number(prod.presentation)) / 100;
+      const unitAct = ((Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)) * Number(prod.presentation)) / 100;
       let activePrice = activeList.find(active => active.name == act.name).price * unitAct;
       activesPrice += activePrice;
     });
@@ -386,9 +407,10 @@ function Dashboard() {
       file: base64String.replace(/^data:application\/pdf;filename=generated\.pdf;base64,/, ''),
       products: sendProductos,
       date: dateFormated,
-      email: fixed.orderEmail,
+      email: JSON.parse(user).decoded.orderEmail,
       user: JSON.parse(user).decoded.name
     }
+    console.log(body)
     try {
       const res = await SendOrder(body, localStorage.getItem('token') || "");
       if (res) {
@@ -432,9 +454,6 @@ function Dashboard() {
         text: `Ah ocurrido un error desconosido, por favor intentelo de nuevo mas tarde o contacte al administrador`,
       });
     }
-
-    // Si deseas descargar el PDF automáticamente, puedes usar:
-    // doc.save('documento.pdf');
   };
 
   useEffect(() => {
