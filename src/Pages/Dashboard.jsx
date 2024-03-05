@@ -363,7 +363,7 @@ function Dashboard() {
         index + 1,
         activeToString(products[i].activePrinciples),
         products[i].quantity,
-        products[i].FullPrice.toLocaleString('es-CO', {
+        products[i].PatPrice.toLocaleString('es-CO', {
           style: 'currency',
           currency: 'COP',
           minimumFractionDigits: 0,
@@ -371,7 +371,7 @@ function Dashboard() {
         }),
         `${products[i].pharmaceuticalForm} x ${products[i].presentation}g`,
         products[i].patientName,
-        (products[i].FullPrice * products[i].quantity).toLocaleString('es-CO', {
+        (products[i].PatPrice * products[i].quantity).toLocaleString('es-CO', {
           style: 'currency',
           currency: 'COP',
           minimumFractionDigits: 0,
