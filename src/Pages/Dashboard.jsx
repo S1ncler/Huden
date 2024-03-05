@@ -202,6 +202,17 @@ function Dashboard() {
   }
 
   const calcPatPrice = (prod, index) => {
+    const prevBase = prod.pharmaceuticalForm;
+    if (
+      prod.activePrinciples.some(objeto => objeto.name === 'ARBUTINA') ||
+      prod.activePrinciples.some(objeto => objeto.name === 'ACIDO KOJICO') ||
+      prod.activePrinciples.some(objeto => objeto.name === 'ACIDO RETINOICO') ||
+      prod.activePrinciples.some(objeto => objeto.name === 'HIDROQUINONA') ||
+      prod.activePrinciples.some(objeto => objeto.name === 'ASCORBIL FOSFATO DE SODIO') ||
+      prod.activePrinciples.some(objeto => objeto.name === 'JAROCOL RL - RESORCINA')
+    ) {
+      prod.pharmaceuticalForm = 'EMULGEL';
+    }
     let percAct = 0;
     prod.activePrinciples.map(act => {      
       const factor = percents.find(percent => percent.asset === act.name);
@@ -220,6 +231,7 @@ function Dashboard() {
     const precio = ((activesPrice + basePrice + fixed.packagingPrice) * fixed.iva) + fixed.labourPrice;
     const finalPrice = Math.round(eval(`(${precio}${fixed.fullPrice}`));
     const patientPrice = Math.round(eval(`${finalPrice}${fixed.patientPrice}`));
+    prod.pharmaceuticalForm = prevBase;
     products[index]['PatPrice'] = patientPrice;
     return patientPrice
   }
