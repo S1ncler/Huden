@@ -180,7 +180,6 @@ function Dashboard() {
     }
     let percAct = 0;
     prod.activePrinciples.map(act => percAct += (Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)));
-    console.log(percAct)
     const percBase = 100 - percAct;
     const unitbase = (percBase * Number(prod.presentation)) / 100;
     const basePrice = baseList.find(base => base.name == prod.pharmaceuticalForm).price * unitbase;
@@ -289,6 +288,7 @@ function Dashboard() {
   const generatePDF = async (rep, reload) => {
     // Crear un nuevo documento PDF
     const doc = new jsPDF();
+    const user = localStorage.getItem('user');
 
     // Agregar imagen y título
     const img = new Image();
@@ -405,7 +405,6 @@ function Dashboard() {
     rep.ids.map((i) => {
       sendProductos.push(products[i])
     })
-    const user = localStorage.getItem('user');
     const body = {
       code: products[rep.ids[0]].doctorDat.ordenCompra,
       file: base64String.replace(/^data:application\/pdf;filename=generated\.pdf;base64,/, ''),
@@ -414,7 +413,6 @@ function Dashboard() {
       email: JSON.parse(user).decoded.orderEmail,
       user: JSON.parse(user).decoded.name
     }
-    console.log(body)
     try {
       const res = await SendOrder(body, localStorage.getItem('token') || "");
       if (res) {
