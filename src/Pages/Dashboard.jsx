@@ -179,13 +179,17 @@ function Dashboard() {
       prod.pharmaceuticalForm = 'EMULGEL';
     }
     let percAct = 0;
-    prod.activePrinciples.map(act => percAct += (Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)));
+    prod.activePrinciples.map(act => {      
+      const factor = percents.find(percent => percent.asset === act.name);
+      percAct += (Number(act.concentration) * (factor ? factor.percentAdjust : 1));
+    });
     const percBase = 100 - percAct;
     const unitbase = (percBase * Number(prod.presentation)) / 100;
     const basePrice = baseList.find(base => base.name == prod.pharmaceuticalForm).price * unitbase;
     let activesPrice = 0;
     prod.activePrinciples.map(act => {
-      const unitAct = ((Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)) * Number(prod.presentation)) / 100;
+      const factor = percents.find(percent => percent.asset === act.name);
+      const unitAct = ((Number(act.concentration) * (factor ? factor.percentAdjust : 1)) * Number(prod.presentation)) / 100;
       let activePrice = activeList.find(active => active.name == act.name).price * unitAct;
       activesPrice += activePrice;
     });
@@ -199,13 +203,17 @@ function Dashboard() {
 
   const calcPatPrice = (prod, index) => {
     let percAct = 0;
-    prod.activePrinciples.map(act => percAct += (Number(act.concentration) * percents.find(percent => percent.asset === act.name).percentAdjust || 1));
+    prod.activePrinciples.map(act => {      
+      const factor = percents.find(percent => percent.asset === act.name);
+      percAct += (Number(act.concentration) * (factor ? factor.percentAdjust : 1));
+    });
     const percBase = 100 - percAct;
     const unitbase = (percBase * Number(prod.presentation)) / 100;
     const basePrice = baseList.find(base => base.name == prod.pharmaceuticalForm).price * unitbase;
     let activesPrice = 0;
-    prod.activePrinciples.map(act => {
-      const unitAct = ((Number(act.concentration) * (percents.find(percent => percent.asset === act.name).percentAdjust || 1)) * Number(prod.presentation)) / 100;
+    prod.activePrinciples.map(act => {      
+      const factor = percents.find(percent => percent.asset === act.name);
+      const unitAct = ((Number(act.concentration) * (factor ? factor.percentAdjust : 1)) * Number(prod.presentation)) / 100;
       let activePrice = activeList.find(active => active.name == act.name).price * unitAct;
       activesPrice += activePrice;
     });
