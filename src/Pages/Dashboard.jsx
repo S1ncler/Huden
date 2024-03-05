@@ -346,6 +346,10 @@ function Dashboard() {
     doc.text('EMAIL:', 15, 107);
     doc.setFontSize(11);
     doc.text(`${products[rep.ids[0]].doctorDat.email}`, 93, 107);
+    doc.setFontSize(13);
+    doc.text('USUARIO QUE ENVÍA:', 15, 114);
+    doc.setFontSize(11);
+    doc.text(`${JSON.parse(user).decoded.name}`, 93, 114);
     doc.setFontSize(9);
 
     // Agregar tabla
@@ -376,7 +380,7 @@ function Dashboard() {
     })
 
     doc.autoTable({
-      startY: 117,
+      startY: 124,
       head: tableData.splice(0, 1),
       body: tableData,
       options: {
