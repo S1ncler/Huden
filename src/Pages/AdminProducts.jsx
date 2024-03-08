@@ -201,7 +201,7 @@ function AdminProducts() {
       name: values.name,
       price: values.price,
       unit: values.unit,
-      state: values.status === 'Activo' ? true : false,
+      state: values.state === 'Activo' ? true : false,
       concentration: "0%"
     }
     try {
@@ -209,6 +209,7 @@ function AdminProducts() {
       if (res.msg === "ASSET_CREATED_OK") {
         Swal.fire('success', 'Producto creado correctamente', 'success');
         table.setCreatingRow(null); //exit creating mode
+        fetchData();
       }
       else if (res.msg === 'ALREADY_ASSET') {
         Swal.fire('error', 'Ya existe un producto con este codigo', 'error');
@@ -233,12 +234,13 @@ function AdminProducts() {
       return;
     }
     setValidationErrors({});
+    console.log(values.state)
     const newRegister = {
       category: values.category,
       name: values.name,
       price: values.price,
       unit: values.unit,
-      state: values.status === 'Activo' ? true : false,
+      state: values.state === 'Activo' ? true : false,
       concentration: "0%"
     }
     try {
@@ -247,6 +249,7 @@ function AdminProducts() {
       if (res.msg === "ASSET_UPDATED_OK") {
         Swal.fire('success', 'Producto editado correctamente', 'success');
         table.setEditingRow(null); //exit editing mode
+        fetchData();
       }
       else {
         Swal.fire('error', 'Ocurrio un error al editar el producto, por favor intentelo de nuevo', 'error');

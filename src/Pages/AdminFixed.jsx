@@ -245,7 +245,7 @@ function AdminFixed() {
         //optionally customize modal content
         renderEditRowDialogContent: ({ table, row, internalEditComponents }) => (
             <>
-                <DialogTitle variant="h3">Editar usuario</DialogTitle>
+                <DialogTitle variant="h3">Editar Datos</DialogTitle>
                 <DialogContent
                     sx={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
                 >
@@ -332,7 +332,7 @@ function AdminFixed() {
             <Header />
             <section className="container mt-5">
                 <div style={{ backgroundColor: '#bed0ff', padding: '15px', borderRadius: '12px' }}>
-                    <h2 className="text-center" style={{ color: '#092f62', marginTop: '20px' }}>Administrador de Datos e ips</h2>
+                    <h2 className="text-center" style={{ color: '#092f62', marginTop: '20px' }}>Administrador de Datos, ips y ajustes de porcentajes</h2>
                     <hr />
                     <section id="admin-tools" className="row justify-content-md-center p-4">
                         <Box>
